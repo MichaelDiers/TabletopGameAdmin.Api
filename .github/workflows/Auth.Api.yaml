@@ -12,12 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONFIGURATION: Release
-      DOCKERFILE_DIRECTORY: Auth.Api/Auth.Api
+      DOCKER_DIRECTORY: Auth.Api
+      DOCKER_FILE: Auth.Api/Dockerfile
       SOLUTION_PATH: Auth.Api/Auth.Api.sln
     steps:
       - uses: actions/checkout@v3
       - run: 'dotnet build ${{ env.SOLUTION_PATH }} -c ${{ env.CONFIGURATION }}'
       - run: 'dotnet test ${{ env.SOLUTION_PATH }} -c ${{ env.CONFIGURATION }} --no-build --no-restore'
-      - run: 'docker build -f Dockerfile .'
-        working-directory: ${{ env.DOCKERFILE_DIRECTORY }}
+      - run: 'docker build -f ${{ env.DOCKER_FILE }} .'
+        working-directory: ${{ env.DOCKER_DIRECTORY }}
   
