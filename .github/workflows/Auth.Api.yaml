@@ -15,7 +15,7 @@ jobs:
       CONFIGURATION: Release
       GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
       SOLUTION_PATH: Auth.Api/Auth.Api.sln
-      SERVICE_NAME: Auth.Api
+      SERVICE_NAME: authapi
       SERVICE_SOURCE: Auth.Api/Auth.Api
     steps:
       - uses: actions/checkout@v3
