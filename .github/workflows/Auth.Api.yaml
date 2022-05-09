@@ -13,5 +13,5 @@ jobs:
     SOLUTION_PATH: Auth.Api/Auth.Api.sln
   test:
     - uses: actions/checkout@v3
-    - run: dotnet build ${{ SOLUTION_PATH }} -c ${{ env.CONFIGURATION }}
-    - run: dotnet test ${{ SOLUTION_PATH }} -c ${{ env.CONFIGURATION }} --no-build --no-restore
+    - run: 'dotnet build ${{ SOLUTION_PATH }} -c ${{ env.CONFIGURATION }}'
+    - run: 'dotnet test ${{ SOLUTION_PATH }} -c ${{ env.CONFIGURATION }} --no-build --no-restore'
