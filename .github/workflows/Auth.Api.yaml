@@ -10,15 +10,22 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: Auth.Api.Test
     env:
       CONFIGURATION: Release
-      DOCKER_DIRECTORY: Auth.Api
-      DOCKER_FILE: Auth.Api/Dockerfile
+      GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
       SOLUTION_PATH: Auth.Api/Auth.Api.sln
+      SERVICE_NAME: Auth.Api
+      SERVICE_SOURCE: Auth.Api/Auth.Api
     steps:
       - uses: actions/checkout@v3
       - run: 'dotnet build ${{ env.SOLUTION_PATH }} -c ${{ env.CONFIGURATION }}'
       - run: 'dotnet test ${{ env.SOLUTION_PATH }} -c ${{ env.CONFIGURATION }} --no-build --no-restore'
-      - run: 'docker build -f ${{ env.DOCKER_FILE }} .'
-        working-directory: ${{ env.DOCKER_DIRECTORY }}
-  
+      - name: 'google auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ env.GCP_CREDENTIALS }}'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+      - name: 'deploy to google cloud run'
+        run: 'gcloud run deploy ${{ env.SERVICE_NAME }} --source ${{ env.SERVICE_SOURCE }}'

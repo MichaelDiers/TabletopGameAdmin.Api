@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>93452b8d-4209-4232-9ada-b838fca701e4</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <Nullable>enable</Nullable>
+	  <UserSecretsId>93452b8d-4209-4232-9ada-b838fca701e4</UserSecretsId>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
