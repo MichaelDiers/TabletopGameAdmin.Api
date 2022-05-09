@@ -2,7 +2,7 @@ name: Auth.Api
 on:
   push:
     branches:
-      - main
+      - dev
     paths:
       - Auth.Api/**
       - .github/workflows/Auth.Api.yaml

@@ -13,9 +13,8 @@ namespace Auth.Api
                     webBuilder =>
                     {
                         webBuilder.UseStartup<Startup>();
-                        var portHttp = Environment.GetEnvironmentVariable("PORT") ?? "5003";
-                        var portHttps = int.TryParse(portHttp, out var port) ? port + 1 : 5004;
-                        webBuilder.UseUrls($"https://localhost:{portHttps}", $"http://localhost:{portHttp}");
+                        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+                        webBuilder.UseUrls($"http://localhost:{port}");
                     });
         }
 
