@@ -19,5 +19,5 @@ jobs:
       - run: 'dotnet build ${{ env.SOLUTION_PATH }} -c ${{ env.CONFIGURATION }}'
       - run: 'dotnet test ${{ env.SOLUTION_PATH }} -c ${{ env.CONFIGURATION }} --no-build --no-restore'
       - run: 'docker build -f Dockerfile'
-        working_directory: ${{ env.DOCKERFILE_DIRECTORY }}
+        working-directory: ${{ env.DOCKERFILE_DIRECTORY }}
   
