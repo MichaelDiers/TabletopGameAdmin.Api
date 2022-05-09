@@ -1,0 +1,17 @@
+name: Auth.Api
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - Auth.Api/**
+      - .github/workflows/Auth.Api.yaml
+  workflow_dispatch:
+jobs:
+  env:
+    CONFIGURATION: Release
+    SOLUTION_PATH: Auth.Api/Auth.Api.sln
+  test:
+    - uses: actions/checkout@v3
+    - run: dotnet build ${{ SOLUTION_PATH }} -c ${{ env.CONFIGURATION }}
+    - run: dotnet test ${{ SOLUTION_PATH }} -c ${{ env.CONFIGURATION }} --no-build --no-restore
