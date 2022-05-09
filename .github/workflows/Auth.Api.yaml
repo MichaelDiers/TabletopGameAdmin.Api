@@ -28,4 +28,4 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
       - name: 'deploy to google cloud run'
-        run: 'gcloud run deploy ${{ env.SERVICE_NAME }} --source ${{ env.SERVICE_SOURCE }}'
+        run: 'gcloud run deploy ${{ env.SERVICE_NAME }} --source ${{ env.SERVICE_SOURCE }} --region=us-east1'
