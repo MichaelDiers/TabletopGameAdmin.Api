@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONFIGURATION: Release
-      DOCKERFILE_DIRECTORY: Auth.Api
+      DOCKERFILE_DIRECTORY: Auth.Api/Auth.Api
       SOLUTION_PATH: Auth.Api/Auth.Api.sln
     steps:
       - uses: actions/checkout@v3
