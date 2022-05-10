@@ -2,7 +2,7 @@ name: Auth.Api
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - Auth.Api/**
       - .github/workflows/Auth.Api.yaml
@@ -14,8 +14,11 @@ jobs:
     env:
       CONFIGURATION: Release
       GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      PORT: ${{ secrets.PORT }}
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      REGION: ${{ secrets.REGION }}
       SOLUTION_PATH: Auth.Api/Auth.Api.sln
-      SERVICE_NAME: authapi
+      SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
       SERVICE_SOURCE: Auth.Api/Auth.Api
     steps:
       - uses: actions/checkout@v3
@@ -28,5 +31,5 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
       - name: 'deploy to google cloud run'
-        run: 'gcloud run deploy ${{ env.SERVICE_NAME }} --source . --region=us-east1'
+        run: 'gcloud run deploy ${{ env.SERVICE_NAME }} --source . --project=${{ env.PROJECT_ID }} --region=${{ env.SERVICE_REGION }} --allow-unauthenticated --port=${{ env.PORT }}'
         working-directory: ${{ env.SERVICE_SOURCE }}
