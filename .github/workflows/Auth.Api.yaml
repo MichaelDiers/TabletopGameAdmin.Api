@@ -31,5 +31,5 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
       - name: 'deploy to google cloud run'
-        run: 'gcloud run deploy ${{ env.SERVICE_NAME }} --source . --project=${{ env.PROJECT_ID }} --region=${{ env.SERVICE_REGION }} --allow-unauthenticated --port=${{ env.PORT }}'
+        run: 'gcloud run deploy ${{ env.SERVICE_NAME }} --source . --project=${{ env.PROJECT_ID }} --region=${{ env.REGION }} --allow-unauthenticated --port=${{ env.PORT }}'
         working-directory: ${{ env.SERVICE_SOURCE }}
