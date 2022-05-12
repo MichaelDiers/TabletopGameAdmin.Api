@@ -1,8 +1,10 @@
 ﻿namespace Auth.Api.Controllers
 {
     using System.Threading.Tasks;
+    using Auth.Api.Contracts.Models;
     using Auth.Api.Contracts.Services;
     using Auth.Api.Requests;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +13,7 @@
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AdminController : ControllerBase
     {
         /// <summary>
@@ -33,18 +36,14 @@
         /// <param name="request">The data of the new user.</param>
         /// <returns>A <see cref="Task{T}" /> whose result indicates the operation result.</returns>
         [HttpPost]
+        [Authorize(Roles = nameof(Roles.AuthSuperUser))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
-            if (!this.HttpContext.Request.Headers.TryGetValue("authorization", out var header))
-            {
-                return new UnauthorizedResult();
-            }
-
-            var result = await this.adminService.CreateUser(request, header);
+            var result = await this.adminService.CreateUser(request);
             return result switch
             {
                 ServiceResult.Created => new StatusCodeResult(StatusCodes.Status201Created),

@@ -3,7 +3,6 @@
     using System.Threading.Tasks;
     using Auth.Api.Contracts.Requests;
     using Auth.Api.Contracts.Services;
-    using Auth.Api.Models;
     using Auth.Api.Responses;
 
     /// <summary>
@@ -48,7 +47,7 @@
                 return new TokenResponse();
             }
 
-            var token = await this.jwtService.CreateAsync(new Payload(user));
+            var token = this.jwtService.Create(user);
             return new TokenResponse(token);
         }
     }

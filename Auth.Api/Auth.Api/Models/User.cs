@@ -1,13 +1,27 @@
 ﻿namespace Auth.Api.Models
 {
-    using System;
     using Auth.Api.Contracts.Models;
+    using Google.Cloud.Firestore;
 
     /// <summary>
     ///     Describes a user databaseService entity.
     /// </summary>
+    [FirestoreData]
     public class User : IUser
     {
+        /// <summary>
+        ///     Creates a new instance of the <see cref="User" /> class.
+        /// </summary>
+        public User()
+            : this(
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                Roles.None)
+        {
+        }
+
         /// <summary>
         ///     Creates a new instance of the <see cref="User" /> class.
         /// </summary>
@@ -24,31 +38,6 @@
             Roles roles
         )
         {
-            if (string.IsNullOrWhiteSpace(userName))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(userName));
-            }
-
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(password));
-            }
-
-            if (string.IsNullOrWhiteSpace(displayName))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(displayName));
-            }
-
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(email));
-            }
-
-            if (roles == Roles.None)
-            {
-                throw new ArgumentException("Value cannot be Roles.None.", nameof(roles));
-            }
-
             this.DisplayName = displayName;
             this.Email = email;
             this.Roles = roles;
@@ -59,26 +48,31 @@
         /// <summary>
         ///     Gets or sets the display name.
         /// </summary>
+        [FirestoreProperty("displayName")]
         public string DisplayName { get; set; }
 
         /// <summary>
         ///     Gets or sets the email address of the user.
         /// </summary>
+        [FirestoreProperty("email")]
         public string Email { get; set; }
 
         /// <summary>
         ///     Gets or sets the password of the user.
         /// </summary>
+        [FirestoreProperty("password")]
         public string Password { get; set; }
 
         /// <summary>
         ///     Gets or sets the roles the user owns.
         /// </summary>
+        [FirestoreProperty("roles")]
         public Roles Roles { get; set; }
 
         /// <summary>
         ///     Gets or sets the name of the user.
         /// </summary>
+        [FirestoreProperty("userName")]
         public string UserName { get; set; }
     }
 }

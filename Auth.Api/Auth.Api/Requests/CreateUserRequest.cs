@@ -4,6 +4,7 @@
     using System.Text.Json.Serialization;
     using Auth.Api.Contracts.Models;
     using Auth.Api.Contracts.Requests;
+    using Auth.Api.Validators;
 
     /// <summary>
     ///     Request data for a new user.
@@ -29,6 +30,7 @@
         /// </summary>
         [JsonPropertyName("roles")]
         [Required]
+        [RoleDefined]
         public Roles Roles { get; set; } = Roles.None;
 
         /// <summary>

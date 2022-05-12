@@ -1,5 +1,6 @@
 ﻿namespace Auth.Api.Responses
 {
+    using System.Text.Json.Serialization;
     using Auth.Api.Contracts.Responses;
 
     /// <summary>
@@ -27,6 +28,7 @@
         /// <summary>
         ///     Gets the json web token.
         /// </summary>
+        [JsonPropertyName("token")]
         public string? Token { get; }
     }
 }

@@ -26,6 +26,11 @@
         /// <summary>
         ///     User can create new admins.
         /// </summary>
-        AuthSuperUser = 1 << 3
+        AuthSuperUser = 1 << 3,
+
+        /// <summary>
+        ///     Combination of all rules.
+        /// </summary>
+        All = Roles.AuthUser | Roles.AuthAdmin | Roles.AuthSuperUser
     }
 }

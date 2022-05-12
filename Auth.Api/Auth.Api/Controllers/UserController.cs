@@ -5,6 +5,7 @@
     using Auth.Api.Contracts.Services;
     using Auth.Api.Requests;
     using Auth.Api.Responses;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         /// <summary>
@@ -35,6 +37,7 @@
         /// <param name="request">The request data for signing in.</param>
         /// <returns>A <see cref="Task" /> whose result is an <see cref="ActionResult{T}" /> of <see cref="TokenResponse" />.</returns>
         [HttpPost]
+        [AllowAnonymous]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
