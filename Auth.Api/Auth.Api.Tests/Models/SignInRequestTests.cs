@@ -6,6 +6,14 @@
 
     public class SignInRequestTests
     {
+        [Fact]
+        public void DefaultCtor()
+        {
+            var actual = new SignInRequest();
+            Assert.Equal(string.Empty, actual.Password);
+            Assert.Equal(string.Empty, actual.UserName);
+        }
+
         [Theory]
         [InlineData("userName", "password")]
         public void SerializeDeserialize(string userName, string password)

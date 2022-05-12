@@ -1,12 +1,11 @@
 ﻿namespace Auth.Api.Responses
 {
     using System.Text.Json.Serialization;
-    using Auth.Api.Contracts.Responses;
 
     /// <summary>
     ///     Describes a token response.
     /// </summary>
-    public class TokenResponse : ITokenResponse
+    public class TokenResponse
     {
         /// <summary>
         ///     Creates a new instance of the <see cref="TokenResponse" /> class.
