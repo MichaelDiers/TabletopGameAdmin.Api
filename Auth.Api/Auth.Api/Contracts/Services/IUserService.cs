@@ -10,6 +10,20 @@
     public interface IUserService
     {
         /// <summary>
+        ///     Create a new user.
+        /// </summary>
+        /// <param name="request">The user data for creating a new user.</param>
+        /// <returns>A <see cref="Task" /> whose <see cref="ServiceResult" /> indicates success or failure.</returns>
+        Task<ServiceResult> CreateUser(ICreateUserRequest request);
+
+        /// <summary>
+        ///     Delete a user.
+        /// </summary>
+        /// <param name="request">The request that contains the user to be deleted.</param>
+        /// <returns>A <see cref="Task" /> whose result is a <see cref="ServiceResult" />.</returns>
+        Task<ServiceResult> DeleteUser(IDeleteUserRequest request);
+
+        /// <summary>
         ///     Authenticate a user and create a json web token.
         /// </summary>
         /// <param name="request">The request that contains the user data.</param>

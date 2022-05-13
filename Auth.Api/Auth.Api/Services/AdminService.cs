@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using Auth.Api.Contracts.Requests;
     using Auth.Api.Contracts.Services;
+    using Auth.Api.Extensions;
     using Auth.Api.Models;
 
     /// <summary>
@@ -40,7 +41,7 @@
         {
             var hash = this.passwordHashService.Hash(request.Password);
             var user = new User(
-                request.UserName.ToUpperInvariant(),
+                request.UserName.NormalizeUserName(),
                 hash,
                 request.UserName,
                 request.Email,

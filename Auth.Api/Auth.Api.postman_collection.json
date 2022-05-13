@@ -1,0 +1,1819 @@
+{
+	"info": {
+		"_postman_id": "fc47bbad-d318-4741-b077-67729cd20d1c",
+		"name": "Auth.Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "local",
+			"item": [
+				{
+					"name": "setup",
+					"item": [
+						{
+							"name": "reset variables",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const url = \"http://localhost:8080\";\r",
+											"\r",
+											"const superUserUserNamePredefined = \"superuser\";\r",
+											"const superUserPasswordPredefined = \"\";\r",
+											"\r",
+											"pm.variables.set(\"signin\", `${url}/api/user`);\r",
+											"pm.variables.set(\"createUser\", `${url}/api/admin`);\r",
+											"pm.variables.set(\"deleteUser\", `${url}/api/user`);\r",
+											"\r",
+											"pm.variables.set(\"superUserUserNamePredefined\", superUserUserNamePredefined);\r",
+											"pm.variables.set(\"superUserPasswordPredefined\", superUserPasswordPredefined);\r",
+											"\r",
+											"pm.variables.set(\"userUserName\", pm.variables.replaceIn('POSTMAN_{{$randomFirstName}}_{{$guid}}'));\r",
+											"pm.variables.set(\"userPassword\", pm.variables.replaceIn('POSTMAN_{{$guid}}'));\r",
+											"pm.variables.set(\"adminUserName\", pm.variables.replaceIn('POSTMAN_{{$randomFirstName}}_{{$guid}}'));\r",
+											"pm.variables.set(\"adminPassword\", pm.variables.replaceIn('POSTMAN_{{$guid}}'));\r",
+											"pm.variables.set(\"superUserUserName\", pm.variables.replaceIn('POSTMAN_{{$randomFirstName}}_{{$guid}}'));\r",
+											"pm.variables.set(\"superUserPassword\", pm.variables.replaceIn('POSTMAN_{{$guid}}'));\r",
+											"\r",
+											"pm.variables.set(\"superUserPredefinedToken\", \"\");\r",
+											"pm.variables.set(\"superUserToken\", \"\");\r",
+											"pm.variables.set(\"adminToken\", \"\");\r",
+											"pm.variables.set(\"userToken\", \"\");\r",
+											"\r",
+											"pm.variables.set(\"roleAuthUser\", \"2\");\r",
+											"pm.variables.set(\"roleAdminUser\", \"4\");\r",
+											"pm.variables.set(\"roleSuperUser\", \"8\");\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign super user",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"    \r",
+											"    pm.response.to.be.ok;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.token).to.be.a('string');\r",
+											"\r",
+											"    const { token } = responseJson;\r",
+											"    pm.variables.set(\"superUserPredefinedToken\", token);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{superUserUserNamePredefined}}\",\r\n    \"password\": \"{{superUserPasswordPredefined}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new user",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(201);\r",
+											"    \r",
+											"    pm.response.to.not.be.withBody;\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{userUserName}}\",\r\n    \"password\": \"{{userPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAuthUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new admin",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(201);\r",
+											"    \r",
+											"    pm.response.to.not.be.withBody;\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{adminUserName}}\",\r\n    \"password\": \"{{adminPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAdminUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create new super user",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(201);\r",
+											"    \r",
+											"    pm.response.to.not.be.withBody;\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{superUserUserName}}\",\r\n    \"password\": \"{{superUserPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleSuperUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "sign in",
+					"item": [
+						{
+							"name": "sign in super user fails if userName is missing",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"{{superUserPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign in super user fails if password is missing",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{superUserUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign in super user",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"    \r",
+											"    pm.response.to.be.ok;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.token).to.be.a('string');\r",
+											"\r",
+											"    const { token } = responseJson;\r",
+											"    pm.variables.set(\"superUserToken\", token);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{superUserUserName}}\",\r\n    \"password\": \"{{superUserPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign in admin",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"    \r",
+											"    pm.response.to.be.ok;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.token).to.be.a('string');\r",
+											"\r",
+											"    const { token } = responseJson;\r",
+											"    pm.variables.set(\"adminToken\", token);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{adminUserName}}\",\r\n    \"password\": \"{{adminPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign in user",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"    \r",
+											"    pm.response.to.be.ok;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.token).to.be.a('string');\r",
+											"\r",
+											"    const { token } = responseJson;\r",
+											"    pm.variables.set(\"userToken\", token);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{userUserName}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign in fails for unknown user",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(401);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{$guid}}\",\r\n    \"password\": \"{{$guid}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "create user",
+					"item": [
+						{
+							"name": "create user fails for user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(403);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{$guid}}\",\r\n    \"password\": \"{{$guid}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAuthUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create admin fails for user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(403);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{$guid}}\",\r\n    \"password\": \"{{$guid}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAdminUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create super user fails for user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(403);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{userToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{$guid}}\",\r\n    \"password\": \"{{$guid}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleSuperUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user succeeds for admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(201);\r",
+											"    \r",
+											"    pm.response.to.not.be.withBody;\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"newUserName\", pm.variables.replaceIn('POSTMAN_{{$randomFirstName}}_{{$guid}}'));\r",
+											"pm.variables.set(\"newPassword\", pm.variables.replaceIn('POSTMAN_{{$guid}}'));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAuthUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{deleteUser}}",
+									"host": [
+										"{{deleteUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create admin fails for admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"newUserName\", pm.variables.replaceIn('POSTMAN_{{$randomFirstName}}_{{$guid}}'));\r",
+											"pm.variables.set(\"newPassword\", pm.variables.replaceIn('POSTMAN_{{$guid}}'));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAdminUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create super user fails for admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"newUserName\", pm.variables.replaceIn('POSTMAN_{{$randomFirstName}}_{{$guid}}'));\r",
+											"pm.variables.set(\"newPassword\", pm.variables.replaceIn('POSTMAN_{{$guid}}'));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleSuperUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user succeeds for super user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(201);\r",
+											"    \r",
+											"    pm.response.to.not.be.withBody;\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAuthUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{deleteUser}}",
+									"host": [
+										"{{deleteUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create admin succeeds for super user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(201);\r",
+											"    \r",
+											"    pm.response.to.not.be.withBody;\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAdminUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{deleteUser}}",
+									"host": [
+										"{{deleteUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create super user succeeds for super user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(201);\r",
+											"    \r",
+											"    pm.response.to.not.be.withBody;\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleSuperUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{deleteUser}}",
+									"host": [
+										"{{deleteUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user fails if userName is missing",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAuthUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user fails if password is missing",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAuthUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user fails if email is missing",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"roles\": {{roleAuthUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user fails if roles is missing",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "clean up",
+					"item": [
+						{
+							"name": "delete user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{userUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{deleteUser}}",
+									"host": [
+										"{{deleteUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{adminUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{deleteUser}}",
+									"host": [
+										"{{deleteUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete super user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserPredefinedToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{superUserUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{deleteUser}}",
+									"host": [
+										"{{deleteUser}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -34,21 +34,27 @@
         ///     Create a new user.
         /// </summary>
         /// <param name="request">The data of the new user.</param>
-        /// <returns>A <see cref="Task{T}" /> whose result indicates the operation result.</returns>
+        /// <returns>A <see cref="Task{TResult}" /> whose result indicates the operation result.</returns>
         [HttpPost]
-        [Authorize(Roles = nameof(Roles.AuthSuperUser))]
+        [Authorize(Roles = "AuthAdmin,AuthSuperUser")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
+            if (((request.Roles & Roles.AuthAdmin) == Roles.AuthAdmin ||
+                 (request.Roles & Roles.AuthSuperUser) == Roles.AuthSuperUser) &&
+                !this.HttpContext.User.IsInRole(nameof(Roles.AuthSuperUser)))
+            {
+                return new BadRequestResult();
+            }
+
             var result = await this.adminService.CreateUser(request);
             return result switch
             {
                 ServiceResult.Created => new StatusCodeResult(StatusCodes.Status201Created),
                 ServiceResult.AlreadyExists => new ConflictResult(),
-                ServiceResult.MissingPrivileges => new UnauthorizedResult(),
                 _ => new UnauthorizedResult()
             };
         }

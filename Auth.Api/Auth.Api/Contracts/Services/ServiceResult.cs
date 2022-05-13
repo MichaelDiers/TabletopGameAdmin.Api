@@ -23,6 +23,21 @@
         /// <summary>
         ///     User is not allowed to execute the operation.
         /// </summary>
-        MissingPrivileges = 3
+        MissingPrivileges = 3,
+
+        /// <summary>
+        ///     Indicates that a document is deleted.
+        /// </summary>
+        DocumentDeleted = 4,
+
+        /// <summary>
+        ///     Indicates that a document does not exists.
+        /// </summary>
+        DocumentDoesNotExists = 5,
+
+        /// <summary>
+        ///     Indicates an internal server error.
+        /// </summary>
+        InternalServerError = 6
     }
 }

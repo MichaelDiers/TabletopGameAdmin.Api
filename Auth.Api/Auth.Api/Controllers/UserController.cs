@@ -2,9 +2,12 @@
 {
     using System.Net.Mime;
     using System.Threading.Tasks;
+    using Auth.Api.Contracts.Models;
     using Auth.Api.Contracts.Services;
+    using Auth.Api.Extensions;
     using Auth.Api.Requests;
     using Auth.Api.Responses;
+    using Auth.Api.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -14,7 +17,7 @@
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "AuthUser,AuthAdmin,AuthSuperUser")]
     public class UserController : ControllerBase
     {
         /// <summary>
@@ -29,6 +32,26 @@
         public UserController(IUserService userService)
         {
             this.userService = userService;
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = "AuthUser,AuthAdmin,AuthSuperUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> DeleteUser([FromBody] DeleteUserRequest request)
+        {
+            // check if self delete or super user
+            if (this.HttpContext.User.HasClaim(
+                    claim => claim.Type == JwtService.UserNameClaimType &&
+                             claim.Value.UserNameEquals(request.UserName)) ||
+                this.HttpContext.User.IsInRole(nameof(Roles.AuthSuperUser)))
+            {
+                var result = await this.userService.DeleteUser(request);
+                return result == ServiceResult.DocumentDeleted ? (ActionResult) new OkResult() : new NotFoundResult();
+            }
+
+            return new UnauthorizedResult();
         }
 
         /// <summary>

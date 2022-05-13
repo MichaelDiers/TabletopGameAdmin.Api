@@ -16,6 +16,14 @@
     /// </summary>
     public class JwtService : IJwtService
     {
+        /// <summary>
+        ///     The claim type for user names.
+        /// </summary>
+        public const string UserNameClaimType = "UserName";
+
+        /// <summary>
+        ///     The application settings for json web tokens.
+        /// </summary>
         private readonly IAppSettingsJwt appSettingsJwt;
 
         /// <summary>
@@ -53,7 +61,7 @@
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.DisplayName),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                new Claim(JwtService.UserNameClaimType, user.UserName)
             };
 
             claims.AddRange(

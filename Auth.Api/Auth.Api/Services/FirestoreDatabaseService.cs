@@ -1,10 +1,12 @@
 ﻿namespace Auth.Api.Services
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using Auth.Api.Contracts.Models;
     using Auth.Api.Contracts.Services;
     using Auth.Api.Models;
     using Google.Cloud.Firestore;
+    using Grpc.Core;
 
     /// <summary>
     ///     Access to the firestore database.
@@ -44,6 +46,49 @@
             catch
             {
                 return ServiceResult.AlreadyExists;
+            }
+        }
+
+        /// <summary>
+        ///     Delete all generic test users.
+        /// </summary>
+        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        public async Task<ServiceResult> DeleteGenericUsers()
+        {
+            var snapshots = await this.collectionReference.GetSnapshotAsync();
+            if (snapshots.Count == 0)
+            {
+                return ServiceResult.DocumentDoesNotExists;
+            }
+
+            var batch = this.collectionReference.Database.StartBatch();
+            foreach (var snapshot in snapshots.Where(snapshot => snapshot.Id.StartsWith("POSTMAN_")))
+            {
+                batch.Delete(snapshot.Reference);
+            }
+
+            await batch.CommitAsync();
+            return ServiceResult.DocumentDeleted;
+        }
+
+        /// <summary>
+        ///     Delete a user by name of the user.
+        /// </summary>
+        /// <param name="userName">The name of the user.</param>
+        /// <returns>
+        ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.DocumentDeleted" /> or
+        ///     <see cref="ServiceResult.DocumentDoesNotExists" />.
+        /// </returns>
+        public async Task<ServiceResult> DeleteUser(string userName)
+        {
+            try
+            {
+                await this.collectionReference.Document(userName).DeleteAsync(Precondition.MustExist);
+                return ServiceResult.DocumentDeleted;
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+            {
+                return ServiceResult.DocumentDoesNotExists;
             }
         }
 

@@ -20,7 +20,7 @@
             try
             {
                 var role = (Roles) value;
-                return (Roles.All & role) == role;
+                return (Roles.All & role) == role && role != Roles.None;
             }
             catch
             {

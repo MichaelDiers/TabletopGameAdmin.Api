@@ -19,6 +19,22 @@
         Task<ServiceResult> CreateUser(IUser user);
 
         /// <summary>
+        ///     Delete all generic test users.
+        /// </summary>
+        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        Task<ServiceResult> DeleteGenericUsers();
+
+        /// <summary>
+        ///     Delete a user by name of the user.
+        /// </summary>
+        /// <param name="userName">The name of the user.</param>
+        /// <returns>
+        ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.DocumentDeleted" /> or
+        ///     <see cref="ServiceResult.DocumentDoesNotExists" />.
+        /// </returns>
+        Task<ServiceResult> DeleteUser(string userName);
+
+        /// <summary>
         ///     Read a user from the database.
         /// </summary>
         /// <param name="userName">The name of the user.</param>
