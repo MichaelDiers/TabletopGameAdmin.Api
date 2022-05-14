@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fc47bbad-d318-4741-b077-67729cd20d1c",
+		"_postman_id": "9ed5e5f4-2796-4e5b-93ba-ea9ee1ac073e",
 		"name": "Auth.Api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -23,12 +23,18 @@
 											"const superUserUserNamePredefined = \"superuser\";\r",
 											"const superUserPasswordPredefined = \"\";\r",
 											"\r",
+											"const apiKey = \"the_api_key\";\r",
+											"const apiKeyName = \"apiKey\";\r",
+											"\r",
 											"pm.variables.set(\"signin\", `${url}/api/user`);\r",
 											"pm.variables.set(\"createUser\", `${url}/api/admin`);\r",
 											"pm.variables.set(\"deleteUser\", `${url}/api/user`);\r",
 											"\r",
 											"pm.variables.set(\"superUserUserNamePredefined\", superUserUserNamePredefined);\r",
 											"pm.variables.set(\"superUserPasswordPredefined\", superUserPasswordPredefined);\r",
+											"\r",
+											"pm.variables.set(\"apiKey\", apiKey);\r",
+											"pm.variables.set(\"apiKeyName\", apiKeyName);\r",
 											"\r",
 											"pm.variables.set(\"userUserName\", pm.variables.replaceIn('POSTMAN_{{$randomFirstName}}_{{$guid}}'));\r",
 											"pm.variables.set(\"userPassword\", pm.variables.replaceIn('POSTMAN_{{$guid}}'));\r",
@@ -432,6 +438,55 @@
 							"response": []
 						},
 						{
+							"name": "sign in super user fails withput api key",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.request.headers.remove(pm.variables.get('apiKeyName'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(401);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{superUserUserName}}\",\r\n    \"password\": \"{{superUserPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "sign in super user",
 							"event": [
 								{
@@ -797,6 +852,69 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"userName\":\"{{$guid}}\",\r\n    \"password\": \"{{$guid}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleSuperUser}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{createUser}}",
+									"host": [
+										"{{createUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create user fails for admin without api key",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(401);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.request.headers.remove(pm.variables.get('apiKeyName'));\r",
+											"\r",
+											"pm.variables.set(\"newUserName\", pm.variables.replaceIn('POSTMAN_{{$randomFirstName}}_{{$guid}}'));\r",
+											"pm.variables.set(\"newPassword\", pm.variables.replaceIn('POSTMAN_{{$guid}}'));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\":\"{{newUserName}}\",\r\n    \"password\": \"{{newPassword}}\",\r\n    \"email\": \"email\",\r\n    \"roles\": {{roleAuthUser}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1780,7 +1898,7 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							""
+							"pm.request.headers.add({key: pm.variables.get('apiKeyName'), value: pm.variables.get('apiKey') }) "
 						]
 					}
 				},

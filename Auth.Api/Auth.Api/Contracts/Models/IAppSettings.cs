@@ -6,6 +6,16 @@
     public interface IAppSettings
     {
         /// <summary>
+        ///     Gets the application key.
+        /// </summary>
+        string ApiKey { get; }
+
+        /// <summary>
+        ///     Gets the name of the application key.
+        /// </summary>
+        string ApiKeyName { get; }
+
+        /// <summary>
         ///     Gets the id of the project.
         /// </summary>
         string ProjectId { get; }

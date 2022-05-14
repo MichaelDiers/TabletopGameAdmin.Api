@@ -2,6 +2,7 @@ namespace Auth.Api
 {
     using Auth.Api.Contracts.Models;
     using Auth.Api.Contracts.Services;
+    using Auth.Api.Extensions;
     using Auth.Api.Models;
     using Auth.Api.Services;
     using Google.Cloud.Firestore;
@@ -25,6 +26,7 @@ namespace Auth.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            app.UseApiKeyMiddleware();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
