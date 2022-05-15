@@ -21,17 +21,17 @@
             false,
             "api:key",
             "api:key",
-            StatusCodes.Status401Unauthorized)]
+            StatusCodes.Status403Forbidden)]
         [InlineData(
             true,
             "api:key",
             "api:key2",
-            StatusCodes.Status401Unauthorized)]
+            StatusCodes.Status403Forbidden)]
         [InlineData(
             true,
             "api:key",
             "",
-            StatusCodes.Status401Unauthorized)]
+            StatusCodes.Status403Forbidden)]
         public async Task InvokeAsync(
             bool setHeader,
             string appSettingsApiKey,

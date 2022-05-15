@@ -4,7 +4,6 @@
     using Auth.Api.Contracts.Requests;
     using Auth.Api.Contracts.Services;
     using Auth.Api.Extensions;
-    using Auth.Api.Models;
     using Auth.Api.Responses;
 
     /// <summary>
@@ -42,26 +41,21 @@
         }
 
         /// <summary>
-        ///     Create a new user.
+        ///     Update the password for a user.
         /// </summary>
-        /// <param name="request">The user data for creating a new user.</param>
-        /// <returns>A <see cref="Task" /> whose <see cref="ServiceResult" /> indicates success or failure.</returns>
-        public async Task<ServiceResult> CreateUser(ICreateUserRequest request)
+        /// <param name="request">The change password request.</param>
+        /// <returns>A <see cref="Task{T}" /> whose result is a <see cref="ServiceResult" />.</returns>
+        public async Task<ServiceResult> ChangePassword(IChangePasswordRequest request)
         {
-            var hash = this.passwordHashService.Hash(request.Password);
-            var user = new User(
-                request.UserName.NormalizeUserName(),
-                hash,
-                request.UserName,
-                request.Email,
-                request.Roles);
-
-            if (await this.databaseService.UserExistsAsync(user.UserName))
+            var signInResult = await this.SignInAsync(request);
+            if (string.IsNullOrWhiteSpace(signInResult.Token))
             {
-                return ServiceResult.AlreadyExists;
+                return ServiceResult.NotFound;
             }
 
-            return await this.databaseService.CreateUserAsync(user);
+            var newPassword = this.passwordHashService.Hash(request.NewPassword);
+            await this.databaseService.ChangePassword(request.UserName.NormalizeUserName(), newPassword);
+            return ServiceResult.Updated;
         }
 
         /// <summary>
@@ -85,7 +79,7 @@
         public async Task<TokenResponse> SignInAsync(ISignInRequest request)
         {
             var user = await this.databaseService.ReadAsync(request.UserName.NormalizeUserName());
-            if (user == null)
+            if (user == null || !this.passwordHashService.VerifyHash(request.Password, user.Password))
             {
                 return new TokenResponse();
             }

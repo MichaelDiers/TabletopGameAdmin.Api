@@ -28,6 +28,17 @@
         }
 
         /// <summary>
+        ///     Update the password for a user.
+        /// </summary>
+        /// <param name="userName">The name of the user.</param>
+        /// <param name="password">The new password.</param>
+        /// <returns>A <see cref="Task" />.</returns>
+        public async Task ChangePassword(string userName, string password)
+        {
+            await this.collectionReference.Document(userName).UpdateAsync(User.PasswordName, password);
+        }
+
+        /// <summary>
         ///     Create a new user in the database.
         /// </summary>
         /// <param name="user">The user data to be created.</param>

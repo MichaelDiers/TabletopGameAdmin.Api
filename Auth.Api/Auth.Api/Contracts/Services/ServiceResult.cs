@@ -38,6 +38,16 @@
         /// <summary>
         ///     Indicates an internal server error.
         /// </summary>
-        InternalServerError = 6
+        InternalServerError = 6,
+
+        /// <summary>
+        ///     Indicates a successful update.
+        /// </summary>
+        Updated = 204,
+
+        /// <summary>
+        ///     Indicates document not found.
+        /// </summary>
+        NotFound = 404
     }
 }

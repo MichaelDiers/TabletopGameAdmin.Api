@@ -17,6 +17,11 @@
         /// <returns>A matching <see cref="ActionResult" />.</returns>
         public static ActionResult ToActionResult(this ServiceResult result)
         {
+            if ((int) result > 100)
+            {
+                return new StatusCodeResult((int) result);
+            }
+
             return result switch
             {
                 ServiceResult.None => new StatusCodeResult(StatusCodes.Status500InternalServerError),

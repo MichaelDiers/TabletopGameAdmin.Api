@@ -10,6 +10,11 @@
     public class User : IUser
     {
         /// <summary>
+        ///     The database name of <see cref="Password" />.
+        /// </summary>
+        public const string PasswordName = "password";
+
+        /// <summary>
         ///     Creates a new instance of the <see cref="User" /> class.
         /// </summary>
         public User()
@@ -60,7 +65,7 @@
         /// <summary>
         ///     Gets or sets the password of the user.
         /// </summary>
-        [FirestoreProperty("password")]
+        [FirestoreProperty(User.PasswordName)]
         public string Password { get; set; }
 
         /// <summary>

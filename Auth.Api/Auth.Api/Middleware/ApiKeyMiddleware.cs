@@ -38,7 +38,7 @@
             }
             else
             {
-                httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
             }
         }
     }

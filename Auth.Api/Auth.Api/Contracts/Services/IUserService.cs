@@ -10,11 +10,11 @@
     public interface IUserService
     {
         /// <summary>
-        ///     Create a new user.
+        ///     Update the password for a user.
         /// </summary>
-        /// <param name="request">The user data for creating a new user.</param>
-        /// <returns>A <see cref="Task" /> whose <see cref="ServiceResult" /> indicates success or failure.</returns>
-        Task<ServiceResult> CreateUser(ICreateUserRequest request);
+        /// <param name="request">The change password request.</param>
+        /// <returns>A <see cref="Task{T}" /> whose result is a <see cref="ServiceResult" />.</returns>
+        Task<ServiceResult> ChangePassword(IChangePasswordRequest request);
 
         /// <summary>
         ///     Delete a user.

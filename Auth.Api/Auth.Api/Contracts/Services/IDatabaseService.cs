@@ -8,6 +8,8 @@
     /// </summary>
     public interface IDatabaseService
     {
+        Task ChangePassword(string userName, string password);
+
         /// <summary>
         ///     Create a new user in the database.
         /// </summary>
