@@ -14,5 +14,11 @@
         /// <param name="request">The user data for creating a new user.</param>
         /// <returns>A <see cref="Task" /> whose <see cref="ServiceResult" /> indicates success or failure.</returns>
         Task<ServiceResult> CreateUser(ICreateUserRequest request);
+
+        /// <summary>
+        ///     Delete all generic test users.
+        /// </summary>
+        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        Task<ServiceResult> DeleteGenericUsersAsync();
     }
 }

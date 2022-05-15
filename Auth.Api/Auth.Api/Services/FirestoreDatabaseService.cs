@@ -35,7 +35,7 @@
         ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.Created" /> if the new user is created and
         ///     <see cref="ServiceResult.AlreadyExists" /> otherwise.
         /// </returns>
-        public async Task<ServiceResult> CreateUser(IUser user)
+        public async Task<ServiceResult> CreateUserAsync(IUser user)
         {
             try
             {
@@ -53,7 +53,7 @@
         ///     Delete all generic test users.
         /// </summary>
         /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
-        public async Task<ServiceResult> DeleteGenericUsers()
+        public async Task<ServiceResult> DeleteGenericUsersAsync()
         {
             var snapshots = await this.collectionReference.GetSnapshotAsync();
             if (snapshots.Count == 0)
@@ -79,7 +79,7 @@
         ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.DocumentDeleted" /> or
         ///     <see cref="ServiceResult.DocumentDoesNotExists" />.
         /// </returns>
-        public async Task<ServiceResult> DeleteUser(string userName)
+        public async Task<ServiceResult> DeleteUserAsync(string userName)
         {
             try
             {
@@ -108,7 +108,7 @@
         /// </summary>
         /// <param name="userName">The name of the user.</param>
         /// <returns>A <see cref="Task{T}" /> whose result is true if a user exists and false otherwise.</returns>
-        public async Task<bool> UserExists(string userName)
+        public async Task<bool> UserExistsAsync(string userName)
         {
             var snapshot = await this.collectionReference.Document(userName).GetSnapshotAsync();
             return snapshot.Exists;

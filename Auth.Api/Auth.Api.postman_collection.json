@@ -29,6 +29,7 @@
 											"pm.variables.set(\"signin\", `${url}/api/user`);\r",
 											"pm.variables.set(\"createUser\", `${url}/api/admin`);\r",
 											"pm.variables.set(\"deleteUser\", `${url}/api/user`);\r",
+											"pm.variables.set(\"deleteTestUser\", `${url}/api/admin`);\r",
 											"\r",
 											"pm.variables.set(\"superUserUserNamePredefined\", superUserUserNamePredefined);\r",
 											"pm.variables.set(\"superUserPasswordPredefined\", superUserPasswordPredefined);\r",
@@ -1737,10 +1738,10 @@
 					]
 				},
 				{
-					"name": "clean up",
+					"name": "delete generic test user",
 					"item": [
 						{
-							"name": "delete user",
+							"name": "delete fails for user",
 							"event": [
 								{
 									"listen": "test",
@@ -1749,7 +1750,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.have.status(403);\r",
 											"\r",
 											"    postman.setNextRequest();\r",
 											"});"
@@ -1764,33 +1765,24 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{superUserPredefinedToken}}",
+											"value": "{{userToken}}",
 											"type": "string"
 										}
 									]
 								},
 								"method": "DELETE",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"userName\":\"{{userUserName}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{deleteUser}}",
+									"raw": "{{deleteTestUser}}",
 									"host": [
-										"{{deleteUser}}"
+										"{{deleteTestUser}}"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "delete admin",
+							"name": "delete fails for admin",
 							"event": [
 								{
 									"listen": "test",
@@ -1799,7 +1791,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.have.status(403);\r",
 											"\r",
 											"    postman.setNextRequest();\r",
 											"});"
@@ -1814,33 +1806,74 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{superUserPredefinedToken}}",
+											"value": "{{adminToken}}",
 											"type": "string"
 										}
 									]
 								},
 								"method": "DELETE",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"userName\":\"{{adminUserName}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{deleteUser}}",
+									"raw": "{{deleteTestUser}}",
 									"host": [
-										"{{deleteUser}}"
+										"{{deleteTestUser}}"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "delete super user",
+							"name": "delete fails for super user with api key",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(401);\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.request.headers.remove(pm.variables.get('apiKeyName'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{superUserToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{deleteTestUser}}",
+									"host": [
+										"{{deleteTestUser}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete succeeds for super user",
 							"event": [
 								{
 									"listen": "test",
@@ -1864,26 +1897,17 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{superUserPredefinedToken}}",
+											"value": "{{superUserToken}}",
 											"type": "string"
 										}
 									]
 								},
 								"method": "DELETE",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"userName\":\"{{superUserUserName}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{deleteUser}}",
+									"raw": "{{deleteTestUser}}",
 									"host": [
-										"{{deleteUser}}"
+										"{{deleteTestUser}}"
 									]
 								}
 							},

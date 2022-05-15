@@ -56,12 +56,12 @@
                 request.Email,
                 request.Roles);
 
-            if (await this.databaseService.UserExists(user.UserName))
+            if (await this.databaseService.UserExistsAsync(user.UserName))
             {
                 return ServiceResult.AlreadyExists;
             }
 
-            return await this.databaseService.CreateUser(user);
+            return await this.databaseService.CreateUserAsync(user);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@
         /// <returns>A <see cref="Task" /> whose result is an <see cref="ServiceResult" />.</returns>
         public async Task<ServiceResult> DeleteUser(IDeleteUserRequest request)
         {
-            return await this.databaseService.DeleteUser(request.UserName.NormalizeUserName());
+            return await this.databaseService.DeleteUserAsync(request.UserName.NormalizeUserName());
         }
 
         /// <summary>

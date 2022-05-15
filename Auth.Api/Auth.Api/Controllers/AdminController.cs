@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using Auth.Api.Contracts.Models;
     using Auth.Api.Contracts.Services;
+    using Auth.Api.Extensions;
     using Auth.Api.Requests;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
@@ -57,6 +58,20 @@
                 ServiceResult.AlreadyExists => new ConflictResult(),
                 _ => new UnauthorizedResult()
             };
+        }
+
+        /// <summary>
+        ///     Delete all generic test users.
+        /// </summary>
+        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        [HttpDelete]
+        [Authorize(Roles = nameof(Roles.AuthSuperUser))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteGenericUsersAsync()
+        {
+            var result = await this.adminService.DeleteGenericUsersAsync();
+            return result.ToActionResult();
         }
     }
 }

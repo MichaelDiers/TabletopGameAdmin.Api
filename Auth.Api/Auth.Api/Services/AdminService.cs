@@ -47,12 +47,21 @@
                 request.Email,
                 request.Roles);
 
-            if (await this.databaseService.UserExists(user.UserName))
+            if (await this.databaseService.UserExistsAsync(user.UserName))
             {
                 return ServiceResult.AlreadyExists;
             }
 
-            return await this.databaseService.CreateUser(user);
+            return await this.databaseService.CreateUserAsync(user);
+        }
+
+        /// <summary>
+        ///     Delete all generic test users.
+        /// </summary>
+        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        public async Task<ServiceResult> DeleteGenericUsersAsync()
+        {
+            return await this.databaseService.DeleteGenericUsersAsync();
         }
     }
 }
