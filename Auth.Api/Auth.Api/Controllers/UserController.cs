@@ -67,7 +67,7 @@
                 this.HttpContext.User.IsInRole(nameof(Roles.AuthSuperUser)))
             {
                 var result = await this.userService.DeleteUser(request);
-                return result == ServiceResult.DocumentDeleted ? (ActionResult) new OkResult() : new NotFoundResult();
+                return result.ToActionResult();
             }
 
             return new UnauthorizedResult();

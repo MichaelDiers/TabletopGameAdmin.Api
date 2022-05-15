@@ -49,7 +49,7 @@
 
             if (await this.databaseService.UserExistsAsync(user.UserName))
             {
-                return ServiceResult.AlreadyExists;
+                return ServiceResult.Conflict;
             }
 
             return await this.databaseService.CreateUserAsync(user);
@@ -58,7 +58,7 @@
         /// <summary>
         ///     Delete all generic test users.
         /// </summary>
-        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        /// <returns>A <see cref="ServiceResult.Deleted" /> or <see cref="ServiceResult.NotFound" />.</returns>
         public async Task<ServiceResult> DeleteGenericUsersAsync()
         {
             return await this.databaseService.DeleteGenericUsersAsync();

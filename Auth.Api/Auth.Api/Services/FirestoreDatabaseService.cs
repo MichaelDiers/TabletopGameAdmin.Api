@@ -44,7 +44,7 @@
         /// <param name="user">The user data to be created.</param>
         /// <returns>
         ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.Created" /> if the new user is created and
-        ///     <see cref="ServiceResult.AlreadyExists" /> otherwise.
+        ///     <see cref="ServiceResult.Conflict" /> otherwise.
         /// </returns>
         public async Task<ServiceResult> CreateUserAsync(IUser user)
         {
@@ -56,20 +56,20 @@
             }
             catch
             {
-                return ServiceResult.AlreadyExists;
+                return ServiceResult.Conflict;
             }
         }
 
         /// <summary>
         ///     Delete all generic test users.
         /// </summary>
-        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        /// <returns>A <see cref="ServiceResult.Deleted" /> or <see cref="ServiceResult.NotFound" />.</returns>
         public async Task<ServiceResult> DeleteGenericUsersAsync()
         {
             var snapshots = await this.collectionReference.GetSnapshotAsync();
             if (snapshots.Count == 0)
             {
-                return ServiceResult.DocumentDoesNotExists;
+                return ServiceResult.NotFound;
             }
 
             var batch = this.collectionReference.Database.StartBatch();
@@ -79,7 +79,7 @@
             }
 
             await batch.CommitAsync();
-            return ServiceResult.DocumentDeleted;
+            return ServiceResult.Deleted;
         }
 
         /// <summary>
@@ -87,19 +87,19 @@
         /// </summary>
         /// <param name="userName">The name of the user.</param>
         /// <returns>
-        ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.DocumentDeleted" /> or
-        ///     <see cref="ServiceResult.DocumentDoesNotExists" />.
+        ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.Deleted" /> or
+        ///     <see cref="ServiceResult.NotFound" />.
         /// </returns>
         public async Task<ServiceResult> DeleteUserAsync(string userName)
         {
             try
             {
                 await this.collectionReference.Document(userName).DeleteAsync(Precondition.MustExist);
-                return ServiceResult.DocumentDeleted;
+                return ServiceResult.Deleted;
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
-                return ServiceResult.DocumentDoesNotExists;
+                return ServiceResult.NotFound;
             }
         }
 

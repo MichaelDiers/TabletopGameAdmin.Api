@@ -16,14 +16,14 @@
         /// <param name="user">The user data to be created.</param>
         /// <returns>
         ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.Created" /> if the new user is created and
-        ///     <see cref="ServiceResult.AlreadyExists" /> otherwise.
+        ///     <see cref="ServiceResult.Conflict" /> otherwise.
         /// </returns>
         Task<ServiceResult> CreateUserAsync(IUser user);
 
         /// <summary>
         ///     Delete all generic test users.
         /// </summary>
-        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        /// <returns>A <see cref="ServiceResult.Deleted" /> or <see cref="ServiceResult.NotFound" />.</returns>
         Task<ServiceResult> DeleteGenericUsersAsync();
 
         /// <summary>
@@ -31,8 +31,8 @@
         /// </summary>
         /// <param name="userName">The name of the user.</param>
         /// <returns>
-        ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.DocumentDeleted" /> or
-        ///     <see cref="ServiceResult.DocumentDoesNotExists" />.
+        ///     A <see cref="Task{T}" /> whose result is <see cref="ServiceResult.Deleted" /> or
+        ///     <see cref="ServiceResult.NotFound" />.
         /// </returns>
         Task<ServiceResult> DeleteUserAsync(string userName);
 

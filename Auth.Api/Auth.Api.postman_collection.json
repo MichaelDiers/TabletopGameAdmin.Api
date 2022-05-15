@@ -1077,7 +1077,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.have.status(204);\r",
 											"\r",
 											"    postman.setNextRequest();\r",
 											"});"
@@ -1310,7 +1310,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.have.status(204);\r",
 											"\r",
 											"    postman.setNextRequest();\r",
 											"});"
@@ -1421,7 +1421,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.have.status(204);\r",
 											"\r",
 											"    postman.setNextRequest();\r",
 											"});"
@@ -1532,7 +1532,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.have.status(204);\r",
 											"\r",
 											"    postman.setNextRequest();\r",
 											"});"
@@ -2444,7 +2444,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.have.status(204);\r",
 											"\r",
 											"    postman.setNextRequest();\r",
 											"});"

@@ -52,18 +52,13 @@
             }
 
             var result = await this.adminService.CreateUser(request);
-            return result switch
-            {
-                ServiceResult.Created => new StatusCodeResult(StatusCodes.Status201Created),
-                ServiceResult.AlreadyExists => new ConflictResult(),
-                _ => new UnauthorizedResult()
-            };
+            return result.ToActionResult();
         }
 
         /// <summary>
         ///     Delete all generic test users.
         /// </summary>
-        /// <returns>A <see cref="ServiceResult.DocumentDeleted" /> or <see cref="ServiceResult.DocumentDoesNotExists" />.</returns>
+        /// <returns>A <see cref="Task{TResult}" /> whose result indicates the operation result.</returns>
         [HttpDelete]
         [Authorize(Roles = nameof(Roles.AuthSuperUser))]
         [ProducesResponseType(StatusCodes.Status200OK)]
