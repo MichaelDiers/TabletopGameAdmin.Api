@@ -30,6 +30,7 @@
 											"pm.variables.set(\"createUser\", `${url}/api/admin`);\r",
 											"pm.variables.set(\"deleteUser\", `${url}/api/user`);\r",
 											"pm.variables.set(\"deleteTestUser\", `${url}/api/admin`);\r",
+											"pm.variables.set(\"changePassword\", `${url}/api/user`);\r",
 											"\r",
 											"pm.variables.set(\"superUserUserNamePredefined\", superUserUserNamePredefined);\r",
 											"pm.variables.set(\"superUserPasswordPredefined\", superUserPasswordPredefined);\r",
@@ -457,7 +458,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(401);\r",
+											"    pm.response.to.have.status(403);\r",
 											"    \r",
 											"    postman.setNextRequest();\r",
 											"});"
@@ -472,6 +473,55 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"userName\": \"{{superUserUserName}}\",\r\n    \"password\": \"{{superUserPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign in super user fails if password is invalid",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(401);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{superUserUserName}}\",\r\n    \"password\": \"{{superUserPassword}}Fail\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -713,6 +763,29 @@
 							},
 							"response": []
 						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
 					]
 				},
 				{
@@ -878,7 +951,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(401);\r",
+											"    pm.response.to.have.status(403);\r",
 											"    \r",
 											"    postman.setNextRequest();\r",
 											"});"
@@ -1738,6 +1811,495 @@
 					]
 				},
 				{
+					"name": "change password",
+					"item": [
+						{
+							"name": "change password fails without api key",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.request.headers.remove(pm.variables.get('apiKeyName'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(403);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{userUserName}}\",\r\n    \"password\": \"{{userPassword}}\",\r\n    \"newPassword\": \"{{userPassword}}New\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{changePassword}}",
+									"host": [
+										"{{changePassword}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password fails without token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.request.headers.remove(pm.variables.get('apiKeyName'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(403);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{userUserName}}\",\r\n    \"password\": \"{{userPassword}}\",\r\n    \"newPassword\": \"{{userPassword}}New\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{changePassword}}",
+									"host": [
+										"{{changePassword}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password fails without user name",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"{{userPassword}}\",\r\n    \"newPassword\": \"{{userPassword}}New\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{changePassword}}",
+									"host": [
+										"{{changePassword}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password fails without password",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{userUserName}}\",\r\n    \"newPassword\": \"{{userPassword}}New\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{changePassword}}",
+									"host": [
+										"{{changePassword}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password fails without new password",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(400);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{userUserName}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{changePassword}}",
+									"host": [
+										"{{changePassword}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password fails if userName and token do not match",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(403);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{$guid}}\",\r\n    \"password\": \"{{userPassword}}\",\r\n    \"newPassword\": \"{{userPassword}}New\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{changePassword}}",
+									"host": [
+										"{{changePassword}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password fails if password is invalid",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(404);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{userUserName}}\",\r\n    \"password\": \"{{userPassword}}Foo\",\r\n    \"newPassword\": \"{{userPassword}}New\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{changePassword}}",
+									"host": [
+										"{{changePassword}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change password succeeds",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(204);\r",
+											"    \r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{userUserName}}\",\r\n    \"password\": \"{{userPassword}}\",\r\n    \"newPassword\": \"{{userPassword}}New\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{changePassword}}",
+									"host": [
+										"{{changePassword}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign in user succeeds with new password",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check response\", function () {\r",
+											"    postman.setNextRequest(null);\r",
+											"    \r",
+											"    pm.response.to.have.status(200);\r",
+											"    \r",
+											"    pm.response.to.be.ok;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.token).to.be.a('string');\r",
+											"\r",
+											"    postman.setNextRequest();\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userName\": \"{{userUserName}}\",\r\n    \"password\": \"{{userPassword}}New\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{signin}}",
+									"host": [
+										"{{signin}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{userToken}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
 					"name": "delete generic test user",
 					"item": [
 						{
@@ -1823,7 +2385,7 @@
 							"response": []
 						},
 						{
-							"name": "delete fails for super user with api key",
+							"name": "delete fails for super user without api key",
 							"event": [
 								{
 									"listen": "test",
@@ -1832,7 +2394,7 @@
 											"pm.test(\"Check response\", function () {\r",
 											"    postman.setNextRequest(null);\r",
 											"    \r",
-											"    pm.response.to.have.status(401);\r",
+											"    pm.response.to.have.status(403);\r",
 											"\r",
 											"    postman.setNextRequest();\r",
 											"});"
